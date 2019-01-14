@@ -18,7 +18,7 @@ class _DashboardState extends State<Dashboard> {
   Stream<QuerySnapshot> _deviceReadingsStream;
   num _gasLevelAverage = 0;
   /// The time the device is allowed to be inactive
-  final _inactivityDuration = const Duration(seconds: 5);
+  final _inactivityDuration = const Duration(seconds: 60);
   /// When this timer hits 0, the device will be considered offline
   /// until a new reading is received
   Timer _offlineTimer;
@@ -86,15 +86,7 @@ class _DashboardState extends State<Dashboard> {
 
   void _attachListener() {
     _deviceReadingsStream.listen((QuerySnapshot event) {
-      // this is ugly but sometimes it be like that
-      var readings = event.documentChanges
-          .map((docChange) => docChange.document.data)
-          .map((Map<String, dynamic> dataMap) => dataMap["value"] as num);
-      _calculateAverage(readings);
-      // start counting down until next reading,
-      // if the timer hits 0 and we haven't received one,
-      // the device will be considered offline
-      _startOfflineTimer();
+      _refreshReadingsAverage();
     });
   }
 
@@ -104,6 +96,7 @@ class _DashboardState extends State<Dashboard> {
         .map((docSnapshot) => docSnapshot.data)
         .map((Map<String, dynamic> dataMap) => dataMap["value"] as num);
     _calculateAverage(readings);
+    _startOfflineTimer();
   }
 
   void _calculateAverage(Iterable<num> readings) {
