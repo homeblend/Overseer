@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "547121244170",
+    "firebase_url": "https://homeblend-68d5c.firebaseio.com",
+    "project_id": "homeblend-68d5c",
+    "storage_bucket": "homeblend-68d5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547121244170:android:7e0ea46a46deeda7",
+        "android_client_info": {
+          "package_name": "com.homeblend.overseer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547121244170-p4fjl9u43t9i5qh92438svc1s6d53ufv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu6S0FP6Gp-aFxE9bnoqULs7nxwazMqTE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
