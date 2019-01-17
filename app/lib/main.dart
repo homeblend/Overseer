@@ -1,4 +1,4 @@
-import 'package:app/dashboard/dashboard.dart';
+import 'package:overseer/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(OverseerApp());

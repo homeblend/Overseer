@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/services/device_readings_repo.dart';
+import 'package:overseer/services/device_readings_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -17,12 +17,16 @@ class _DashboardState extends State<Dashboard> {
       DeviceReadingsRepository();
   Stream<QuerySnapshot> _deviceReadingsStream;
   num _gasLevelAverage = 0;
+
   /// The time the device is allowed to be inactive
   final _inactivityDuration = const Duration(seconds: 60);
+
+  DateTime mostRecentReadingDate;
+  num mostRecentReading;
+
   /// When this timer hits 0, the device will be considered offline
   /// until a new reading is received
   Timer _offlineTimer;
-
 
   _DashboardState() {
     _deviceReadingsStream = _deviceReadingRepo.getChangestream();
@@ -38,10 +42,30 @@ class _DashboardState extends State<Dashboard> {
         title: Text(widget.title),
       ),
       body: Container(
-          padding: EdgeInsets.all(22.0),
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: _buildStatusRows(theme)),
+        padding: EdgeInsets.all(22.0),
+        child: Column(
+          children: <Widget>[
+            _buildStatusRows(theme),
+            Row(
+              children: <Widget>[
+                Text(
+                  mostRecentReadingDate.toLocal().toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  ":           " + mostRecentReading.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -92,6 +116,10 @@ class _DashboardState extends State<Dashboard> {
 
   void _refreshReadingsAverage() async {
     var documents = await _deviceReadingRepo.getDocuments();
+    // capture most recent reading
+    var readingData = documents.first.data;
+    mostRecentReadingDate = DateTime.parse(readingData["timestamp"] as String);
+    mostRecentReading = readingData["value"] as num;
     var readings = documents
         .map((docSnapshot) => docSnapshot.data)
         .map((Map<String, dynamic> dataMap) => dataMap["value"] as num);
