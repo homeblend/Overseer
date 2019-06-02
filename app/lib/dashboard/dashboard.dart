@@ -21,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
   /// The time the device is allowed to be inactive
   final _inactivityDuration = const Duration(seconds: 60);
 
-  DateTime mostRecentReadingDate;
+  DateTime mostRecentReadingDate = DateTime.now();
   num mostRecentReading;
 
   /// When this timer hits 0, the device will be considered offline
@@ -116,15 +116,19 @@ class _DashboardState extends State<Dashboard> {
 
   void _refreshReadingsAverage() async {
     var documents = await _deviceReadingRepo.getDocuments();
-    // capture most recent reading
-    var readingData = documents.first.data;
-    mostRecentReadingDate = DateTime.parse(readingData["timestamp"] as String);
-    mostRecentReading = readingData["value"] as num;
-    var readings = documents
-        .map((docSnapshot) => docSnapshot.data)
-        .map((Map<String, dynamic> dataMap) => dataMap["value"] as num);
-    _calculateAverage(readings);
-    _startOfflineTimer();
+    setState(() {
+      // capture most recent reading
+      var readingData = documents.first.data;
+      mostRecentReadingDate = readingData["timestamp"] as DateTime;
+      if (readingData["reading"] is num) {
+        mostRecentReading = readingData["reading"] as num;
+        var readings = documents
+            .map((docSnapshot) => docSnapshot.data)
+            .map((Map<String, dynamic> dataMap) => dataMap["reading"] as num);
+        _calculateAverage(readings);
+        _startOfflineTimer();
+      }
+    });
   }
 
   void _calculateAverage(Iterable<num> readings) {
@@ -147,7 +151,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  // TODO: make this user config driven
+  // TODO: make this config driven
   Widget _buildStatusIcon() {
     Widget offlineIcon = Icon(
       Icons.cloud_off,

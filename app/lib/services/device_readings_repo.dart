@@ -9,10 +9,10 @@ class DeviceReadingsRepository {
 
   CollectionReference _reference;
   // This limit needs to depend on the update rate
-  // Since the update rate for this gas sensors is set to every 10 seconds,
-  // we're just set this to be the last 60 readings, which is roughly equivalent
+  // Our gas-sensor's update rate is every 15 seconds,
+  // so we're using the last 60 readings, which is roughly equivalent
   // to the last 10 minutes
-  final num limit = 60;
+  final num limit = 40;
 
   DeviceReadingsRepository._internal() {
     _reference = Firestore.instance.collection('readings');
