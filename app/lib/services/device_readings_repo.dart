@@ -10,7 +10,7 @@ class DeviceReadingsRepository {
   CollectionReference _reference;
   // This limit needs to depend on the update rate
   // Our gas-sensor's update rate is every 15 seconds,
-  // so we're using the last 60 readings, which is roughly equivalent
+  // so we're using the last 40 readings, which is roughly equivalent
   // to the last 10 minutes
   final num limit = 40;
 
